@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErogameMusicInfo", "ErogameMusicInfo.csproj", "{FB7604AD-C7C2-48CD-BF30-1B6014B89BDD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB7604AD-C7C2-48CD-BF30-1B6014B89BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB7604AD-C7C2-48CD-BF30-1B6014B89BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB7604AD-C7C2-48CD-BF30-1B6014B89BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB7604AD-C7C2-48CD-BF30-1B6014B89BDD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F761E7EB-F37C-43F3-9BB0-29119F447F9E}
+	EndGlobalSection
+EndGlobal
