@@ -11,7 +11,7 @@ namespace ErogameMusicInfo.Test
     /// データベースのクエリが間違っていないかのテスト
     /// </summary>
     [TestClass]
-    public class MemoryDatabase
+    public class DatabaseQueryTest
     {
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ErogameMusicInfo.Test
             // 取り出す
             var data = database.GetDataFromMusicTitle("冬に咲く華");
             Debug.WriteLine(data);
-            Assert.AreEqual(data.GameName, "彼女のセイイキ", "ゲーム名が違う");
+            Assert.AreEqual(data.GameTitle, "彼女のセイイキ", "ゲーム名が違う");
         }
 
         /// <summary>

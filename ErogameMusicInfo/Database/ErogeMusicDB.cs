@@ -63,11 +63,23 @@ is_erogame TEXT NOT NULL
                 {
                     using (var command = connection.CreateCommand())
                     {
+                        // シングルクォーテーションが曲名に入ってるとうまく動かなくなるので修正
+                        // Girls' Carnival 等
                         command.CommandText = $@"
 INSERT INTO eroge_music (erogame_scape_id, music_title, game_title, sell_day, thumbnail, brand_name, home_page, is_erogame) VALUES(
-'{data.Id}', '{data.MusicName}', '{data.GameName}', '{data.Sellday}', '{data.Thumbnail}', '{data.BrandName}', '{data.Homepage}', '{data.IsErogame}'
+@id, @music_title, @game_title, @sell_day, @thumbnail, @brand_name, @home_page, @is_erogame
 );
 ";
+                        // エスケープ対策に@で仮置きした部分を置き換える
+                        command.Parameters.Add(new SQLiteParameter("@id", data.Id));
+                        command.Parameters.Add(new SQLiteParameter("@music_title", data.MusicTitle));
+                        command.Parameters.Add(new SQLiteParameter("@game_title", data.GameTitle));
+                        command.Parameters.Add(new SQLiteParameter("@sell_day", data.Sellday));
+                        command.Parameters.Add(new SQLiteParameter("@thumbnail", data.Thumbnail));
+                        command.Parameters.Add(new SQLiteParameter("@brand_name", data.BrandName));
+                        command.Parameters.Add(new SQLiteParameter("@home_page", data.Homepage));
+                        command.Parameters.Add(new SQLiteParameter("@is_erogame", data.IsErogame));
+
                         command.ExecuteNonQuery();
                     }
                     transaction.Commit();
@@ -86,15 +98,12 @@ INSERT INTO eroge_music (erogame_scape_id, music_title, game_title, sell_day, th
             using (var connection = new SQLiteConnection(connectionText))
             {
                 connection.Open();
-                // トランザクションを有効にしたほうが速いらしい
                 using (var transaction = connection.BeginTransaction())
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        // SELECT 実行
-                        command.CommandText = $@"
-SELECT * FROM eroge_music WHERE music_title = '{musicTitle}'
-";
+                        command.CommandText = "SELECT * FROM eroge_music WHERE music_title = @music_title";
+                        command.Parameters.Add(new SQLiteParameter("@music_title", musicTitle));
                         // データを読む
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
@@ -108,7 +117,7 @@ SELECT * FROM eroge_music WHERE music_title = '{musicTitle}'
                                 reader.GetString(5),
                                 reader.GetString(6),
                                 reader.GetString(7),
-                                reader.GetString(8) == "true"
+                                reader.GetString(8) == "True"
                             );
                         }
                     }
@@ -129,15 +138,13 @@ SELECT * FROM eroge_music WHERE music_title = '{musicTitle}'
             using (var connection = new SQLiteConnection(connectionText))
             {
                 connection.Open();
-                // トランザクションを有効にしたほうが速いらしい
                 using (var transaction = connection.BeginTransaction())
                 {
                     using (var command = connection.CreateCommand())
                     {
                         // https://stackoverflow.com/questions/15684039/checking-if-record-exists-in-sqlite-c-sharp
-                        command.CommandText = $@"
-SELECT count(*) FROM eroge_music WHERE music_title = '{musicTitle}'
-";
+                        command.CommandText = "SELECT count(*) FROM eroge_music WHERE music_title = @music_title";
+                        command.Parameters.Add(new SQLiteParameter("@music_title", musicTitle));
                         int count = Convert.ToInt32(command.ExecuteScalar());
                         isExists = count != 0;
                     }
@@ -145,7 +152,6 @@ SELECT count(*) FROM eroge_music WHERE music_title = '{musicTitle}'
             }
             return isExists;
         }
-
 
     }
 }

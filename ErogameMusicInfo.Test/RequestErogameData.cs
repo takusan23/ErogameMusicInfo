@@ -1,7 +1,7 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ErogameMusicInfo.Internet;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 /// <summary>
 /// テストです
@@ -21,9 +21,10 @@ namespace ErogameMusicInfo.Test
         public async Task POSTRequest()
         {
             var gameData = await ErogameScape.GetErogameData("冬に咲く華");
+            Assert.IsNotNull(gameData, "曲名が違うかクエリ間違えてますね");
             Debug.WriteLine(gameData.ToString());
-            Assert.AreEqual(gameData.MusicName, "冬に咲く華", "曲名が違う");
-            Assert.AreEqual(gameData.GameName, "彼女のセイイキ", "ゲーム名が違う");
+            Assert.AreEqual(gameData.MusicTitle, "冬に咲く華", "曲名が違う");
+            Assert.AreEqual(gameData.GameTitle, "彼女のセイイキ", "ゲーム名が違う");
         }
     }
 }

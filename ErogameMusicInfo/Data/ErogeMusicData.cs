@@ -3,9 +3,9 @@
     /// <summary>
     /// エロゲソングとエロゲ情報を繋ぐデータクラス
     /// </summary>
-    /// <param name="MusicName">エロゲソング名</param>
+    /// <param name="MusicTitle">エロゲソング名</param>
     /// <param name="Id">ErogameScapeのId</param>
-    /// <param name="GameName">ゲーム名</param>
+    /// <param name="GameTitle">ゲーム名</param>
     /// <param name="Sellday">発売日</param>
     /// <param name="Thumbnail">サムネイルURL</param>
     /// <param name="BrandName">ブランド名</param>
@@ -14,8 +14,8 @@
     public record ErogeMusicData
      (
          string Id,
-         string MusicName,
-         string GameName,
+         string MusicTitle,
+         string GameTitle,
          string Sellday,
          string Thumbnail,
          string BrandName,

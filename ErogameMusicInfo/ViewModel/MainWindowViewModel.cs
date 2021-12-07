@@ -1,6 +1,10 @@
-﻿using ErogameMusicInfo.Tool;
+﻿using ErogameMusicInfo.Data;
+using ErogameMusicInfo.Database;
+using ErogameMusicInfo.Internet;
+using ErogameMusicInfo.Tool;
 using ErogameMusicInfo.ViewModel.Tool;
-using System.Timers;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace ErogameMusicInfo.ViewModel
 {
@@ -13,31 +17,59 @@ namespace ErogameMusicInfo.ViewModel
         // ViewModelからViewへ変更通知を送るやつ
         public ViewModelValueChanged<string> CurrentPlayingMusicTitle { get; } = new ViewModelValueChanged<string>("");
 
-        // タイマー
-        public Timer UpdateMusicInfoTimer = new Timer();
+        // エロゲソングとエロゲ情報のデータクラス
+        public ViewModelValueChanged<ErogeMusicData?> ErogameInfo { get; private set; } = new ViewModelValueChanged<ErogeMusicData?>(null);
+
+        // データベース
+        public ErogeMusicDB database = new ErogeMusicDB();
+
+        // 同じ曲名の場合は取得しないので
+        private string currentPlayingMusicTitle = "";
 
         public MainWindowViewModel()
         {
-            UpdateMusicInfoTimer.Elapsed += (s, e) =>
-            {
-                var windowTitleName = WindowTitleGetTool.GetWindowTitleFromAppName(MusicAppName);
-                var data = MusicCenterTitleParser.ParseWindowTitle(windowTitleName);
-                CurrentPlayingMusicTitle.value = $@"
-                曲名：{data.MusicTitle}
-                アーティスト：{data.MusicArtist}
-                アルバム：{data.MusicAlbum}
-                ";
-            };
-            UpdateMusicInfoTimer.Interval = 1000;
-            UpdateMusicInfoTimer.Start();
+            // データベース用意
+            database.CreateDB();
+            // 曲名監視へ
+            InitLoop();
         }
 
         /// <summary>
-        /// アプリ終了時に呼んで
+        /// 定期的にMusicCenterのウィンドウタイトルを取得して、データを取得する
         /// </summary>
-        public void Release()
+        public async void InitLoop()
         {
-            UpdateMusicInfoTimer.Stop();
+            while (true)
+            {
+                // 曲名を取得
+                var windowTitle = WindowTitleGetTool.GetWindowTitleFromAppName(MusicAppName);
+                var musicTitleData = MusicCenterTitleParser.ParseWindowTitle(windowTitle);
+                // 曲が変わったとき
+                if (currentPlayingMusicTitle != musicTitleData.MusicTitle)
+                {
+                    currentPlayingMusicTitle = musicTitleData.MusicTitle;
+                    // データベースにあるならそっちのデータを使う
+                    if (database.IsExistsDataFromMusicTitle(musicTitleData.MusicTitle))
+                    {
+                        ErogameInfo.value = database.GetDataFromMusicTitle(musicTitleData.MusicTitle);
+                        Debug.WriteLine("データベースから取得");
+                    }
+                    else
+                    {
+                        // インターネットから取得
+                        var erogeMusicDataFromInternet = await ErogameScape.GetErogameData(musicTitleData.MusicTitle);
+                        // 取れないときの対策
+                        if (erogeMusicDataFromInternet != null)
+                        {
+                            database.InsertData(erogeMusicDataFromInternet);
+                            ErogameInfo.value = erogeMusicDataFromInternet;
+                            Debug.WriteLine("インターネットから取得");
+                        }
+                    }
+                    Debug.WriteLine(ErogameInfo.value);
+                }
+                await Task.Delay(1_000);
+            }
         }
 
     }
