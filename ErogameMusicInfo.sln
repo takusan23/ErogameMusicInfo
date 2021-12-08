@@ -5,7 +5,12 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErogameMusicInfo", "ErogameMusicInfo\ErogameMusicInfo.csproj", "{9EB072F3-5549-4011-B040-ADE76C5CC7B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErogameMusicInfo.Test", "ErogameMusicInfo.Test\ErogameMusicInfo.Test.csproj", "{0AA4B927-94A9-461E-805C-5CC2392FA43D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErogameMusicInfo.Test", "ErogameMusicInfo.Test\ErogameMusicInfo.Test.csproj", "{0AA4B927-94A9-461E-805C-5CC2392FA43D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C96E9ED-8126-4282-9403-8735B095EC83}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

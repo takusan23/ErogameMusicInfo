@@ -26,6 +26,8 @@ SELECT
   gl.id,
   gl.gamename,
   gl.sellday,
+  gl.dmm_genre,
+  gl.dmm_genre_2,
   gl.dmm,
   bl.brandname,
   gl.shoukai,
@@ -56,9 +58,12 @@ SELECT
             {
                 return null;
             }
-            // 取得
+            // サムネイルをFANZAから取得
             var dmmId = GetValueFromTableElementKey(document, "dmm");
-            var thumbnailUrl = $"https://pics.dmm.co.jp/digital/pcgame/{dmmId}/{dmmId}pl.jpg";
+            // もしかしたらバイナリじゃなくて箱かもしれないし、PC版が全てではない
+            var contentType = GetValueFromTableElementKey(document, "dmm_genre");
+            var targetDevice = GetValueFromTableElementKey(document, "dmm_genre_2");
+            var thumbnailUrl = $"https://pics.dmm.co.jp/{contentType}/{targetDevice}/{dmmId}/{dmmId}pl.jpg";
             var erogameData = new ErogeMusicData(
                 GetValueFromTableElementKey(document, "id"),
                 GetValueFromTableElementKey(document, "name"),
